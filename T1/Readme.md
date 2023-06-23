@@ -1,3 +1,6 @@
+# Trabalho 1 - Parte 1
+...
+
 # Trabalho 1 - Parte 2
 
 ## The MNIST Dataset
