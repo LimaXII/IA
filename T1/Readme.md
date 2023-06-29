@@ -1,5 +1,5 @@
 # Trabalho 1 - Parte 1
-...
+Deixamos as variáveis w e b com o valor 0, o num_iterations com o valor inicial de 100, e o alpha alteramos para 0.11, pois diminuia o valor do EQM, resultando em uma predição melhor, com alpha >= 0.12 a reta resultante não converge. O valor final do EQM com esse parâmetros é de 0.5777860252560527, realizando testes com o num_iterations maior, percebemos que o valor de EQM converge para 0.575, ou seja, com um num_iterations relativamente pequeno, nos aproximamos bastante da reta ideal.
 
 # Trabalho 1 - Parte 2
 
