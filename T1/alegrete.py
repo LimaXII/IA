@@ -9,7 +9,12 @@ def compute_mse(b, w, data):
     :param data: np.array - matriz com o conjunto de dados, x na coluna 0 e y na coluna 1
     :return: float - o erro quadratico medio
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    collumn_x = data[:, 0]
+    collumn_y = data[:, 1]
+    
+    mse = ((w*collumn_x + b - collumn_y) ** 2).mean()
+
+    return mse
 
 
 def step_gradient(b, w, data, alpha):
@@ -21,7 +26,14 @@ def step_gradient(b, w, data, alpha):
     :param alpha: float - taxa de aprendizado (a.k.a. tamanho do passo)
     :return: float,float - os novos valores de b e w, respectivamente
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    collumn_x = data[:, 0]
+    collumn_y = data[:, 1]
+    prediction_array = (w*collumn_x + b - collumn_y)
+    
+    new_b = b - 2*alpha*(prediction_array.mean())
+    new_w = w - 2*alpha*((prediction_array*collumn_x).mean())
+    
+    return new_b, new_w
 
 
 def fit(data, b, w, alpha, num_iterations):
@@ -39,4 +51,12 @@ def fit(data, b, w, alpha, num_iterations):
     :param num_iterations: int - numero de épocas/iterações para executar a descida de gradiente
     :return: list,list - uma lista com os b e outra com os w obtidos ao longo da execução
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    list_b = [b]
+    list_w = [w]
+    
+    for i in range(num_iterations):
+        b, w = step_gradient(b, w, data, alpha)
+        list_b.append(b)
+        list_w.append(w)
+            
+    return list_b, list_w
