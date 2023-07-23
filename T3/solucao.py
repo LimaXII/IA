@@ -12,9 +12,11 @@ class Nodo:
         :param pai:Nodo, referencia ao nodo pai, (None no caso do nó raiz)
         :param acao:str, acao a partir do pai que leva a este nodo (None no caso do nó raiz)
         :param custo:int, custo do caminho da raiz até este nó
-        """
-        # substitua a linha abaixo pelo seu codigo
-        raise NotImplementedError
+        """        
+        self.estado = estado
+        self.pai = pai
+        self.acao = acao
+        self.custo = custo
 
 
 def sucessor(estado:str)->Set[Tuple[str,str]]:
@@ -77,8 +79,14 @@ def expande(nodo:Nodo)->Set[Nodo]:
     :param nodo: objeto da classe Nodo
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    # Lista de filhos
+    nodes_list = []
+    # Verifica filhos
+    successors = sucessor(nodo.estado)
+    # Atualiza lista de filhos
+    for succ in successors:
+        nodes_list.append(Nodo(succ[1], nodo, succ[0], 1 + nodo.custo))
+    return nodes_list
 
 
 def astar_hamming(estado:str)->list[str]:
