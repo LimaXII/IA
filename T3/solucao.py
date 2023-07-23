@@ -1,10 +1,11 @@
 from typing import Iterable, Set, Tuple
+import help
 
 class Nodo:
     """
     Implemente a classe Nodo com os atributos descritos na funcao init
     """
-    def __init__(self, estado:str, pai:Nodo, acao:str, custo:int):
+    def __init__(self, estado:str, pai, acao:str, custo:int):
         """
         Inicializa o nodo com os atributos recebidos
         :param estado:str, representacao do estado do 8-puzzle
@@ -24,9 +25,50 @@ def sucessor(estado:str)->Set[Tuple[str,str]]:
     :param estado:
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    # Conjunto de elementos possíveis    
+    possible_set = {'1', '2', '3', '4', '5', '6', '7', '8', '_'}
+    
+    # Verifica se o estado/string possui 9 caracteres
+    if len(estado) != 9:
+        return "ERRO"
+    # Verifica se o estado/string não repete elementos
+    if len(set(estado)) != 9:
+        return "ERRO"
+    # Verfica se os caracteres do estado/string estão no conjunto de elementos possíveis
+    for char in estado:
+        if char not in possible_set:
+            return "ERRO"
 
+    underline_position = estado.find('_')
+    successors = []
+    
+    # Pode mover pra cima
+    if underline_position - 3 >= 0:
+        successors.append((
+            "acima",
+            help.swap_string(estado, underline_position, underline_position - 3)
+        ))
+    # Pode mover pra baixo
+    if underline_position + 3 <= 8:
+        successors.append((
+            "abaixo",
+            help.swap_string(estado, underline_position, underline_position + 3)
+        ))
+    # Pode mover pra direita
+    if (underline_position + 1) % 3 != 0:
+        successors.append((
+            "direita",
+            help.swap_string(estado, underline_position, underline_position + 1)
+        ))
+    # Pode mover pra esquerda
+    if underline_position % 3 != 0:
+        successors.append((
+            "esquerda",
+            help.swap_string(estado, underline_position, underline_position - 1)
+        ))
+        
+    return successors
+    
 
 def expande(nodo:Nodo)->Set[Nodo]:
     """

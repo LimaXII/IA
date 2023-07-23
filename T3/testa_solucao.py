@@ -1,6 +1,6 @@
 import unittest
 import timer
-import eight_puzzle.solucao as solucao
+import solucao as solucao
 
 
 class TestaSolucao(unittest.TestCase):
