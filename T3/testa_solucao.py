@@ -53,7 +53,6 @@ class TestaSolucao(unittest.TestCase):
 
         return response
 
-
     def test_run_astar_hamming(self):
         """
         Testa o A* com dist. Hamming em um estado com solução e outro sem solução.
@@ -91,4 +90,7 @@ class TestaSolucao(unittest.TestCase):
             self.assertEqual(solucao_otima, self.run_algorithm(alg, estado))
 
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
+    #solucao.astar_hamming("1235_6478")
+    #solucao.astar_hamming("2_3541687")
+    solucao.astar_hamming("185423_67")
