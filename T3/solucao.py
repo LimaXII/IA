@@ -1,5 +1,6 @@
 from typing import Iterable, Set, Tuple
 import help
+from heapq import heapify, heappush, heappop
 
 class Nodo:
     """
@@ -18,6 +19,10 @@ class Nodo:
         self.acao = acao
         self.custo = custo
         self.custo_estimado = 0
+        
+    # override the comparison operator
+    def __lt__(self, nxt):
+        return self.custo_estimado < nxt.custo_estimado
 
 
 def sucessor(estado:str)->Set[Tuple[str,str]]:
@@ -99,18 +104,13 @@ def astar_hamming(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    
-    #if not is_valid_state(estado):
-    #    print('Estado invalido. Por favor, tente novamente')
-    #    return
-
     initial_node = Nodo(estado, None, None, 0)
     explored = set()
     border = [initial_node]
+    heapify(border)
     
     while (border):    
-        current_node = remove_lowest_node(border) #função que retira o nodo baseado na heurística
+        current_node = heappop(border) #função que retira o nodo com o menor custo estimado
         
         if current_node.estado == "12345678_": #final state
             path = []
@@ -123,18 +123,9 @@ def astar_hamming(estado:str)->list[str]:
             son_node_set = expande(current_node)
             for node in son_node_set:
                 node.custo_estimado = node.custo + hamming_cost(node)
-            border += son_node_set
+                heappush(border, node)
             
     return None
-
-# ADICIONAL
-def remove_lowest_node(border: list[Nodo]) -> Nodo:
-    sel_node = border[0]
-    for node in border[1:]:
-        if node.custo_estimado < sel_node.custo_estimado:
-            sel_node = node
-    border.remove(sel_node)
-    return sel_node
 
 # ADICIONAL
 def hamming_cost(node: Nodo) -> int:
