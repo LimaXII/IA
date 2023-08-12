@@ -147,8 +147,45 @@ def astar_manhattan(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    initial_node = Nodo(estado, None, None, 0)
+    explored = set()
+    border = [initial_node]
+    heapify(border)
+    
+    while (border):    
+        current_node = heappop(border) #função que retira o nodo com o menor custo estimado
+        
+        if current_node.estado == "12345678_": #final state
+            path = []
+            while(current_node.pai is not None):
+                path.insert(0, current_node.acao)
+                current_node = current_node.pai
+            return path #lista de ações que leva ao estado final
+        if current_node.estado not in explored:
+            explored.add(current_node.estado)
+            son_node_set = expande(current_node)
+            for node in son_node_set:
+                node.custo_estimado = node.custo + manhattan_cost(node)
+                heappush(border, node)
+            
+    return None
+
+# ADICIONAL
+def manhattan_cost(node: Nodo) -> int:
+    node_state = node.estado
+    final_board = {'1' : [0,0], '2' : [1,0], '3' : [2,0],
+                   '4' : [0,1], '5' : [1,1], '6' : [2,1],
+                   '7' : [0,2], '8' : [1,2], '_' : [2,2]}
+    
+    board = {}
+    for i in range(9):
+        board[node_state[i]] = [i % 3, i // 3]
+        
+    manhattan_cost = 0
+    for key in board.keys():
+        manhattan_cost += abs(final_board[key][0] - board[key][0]) + abs(final_board[key][1] - board[key][1])
+    
+    return manhattan_cost
 
 def bfs(estado:str)->list[str]:
     """

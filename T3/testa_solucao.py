@@ -94,3 +94,4 @@ if __name__ == '__main__':
     #solucao.astar_hamming("1235_6478")
     #print(solucao.astar_hamming("2_3541687"))
     #solucao.astar_hamming("185423_67")
+    #print(solucao.manhattan_cost(solucao.Nodo("185423_67", None, None, 0)))
