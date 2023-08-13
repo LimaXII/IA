@@ -68,6 +68,7 @@ def sucessor(estado:str)->Set[Tuple[str,str]]:
         
     return successor_set
     
+    
 def invalid_state(state: str) -> bool:
     # Verifica se o estado/string possui 9 caracteres
     if len(state) != 9:
@@ -186,6 +187,7 @@ def dfs(estado:str)->list[str]:
     """
     return bfs_or_dfs(estado, constants.STACK)
 
+
 def astar_new_heuristic(estado:str)->list[str]:
     """
     Recebe um estado (string), executa a busca A* com h(n) = sua nova heurística e
@@ -195,8 +197,8 @@ def astar_new_heuristic(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    return astar(estado, heuristic.eucledian_cost)
+
 
 def find_path(node: Nodo) -> list[str]:
     path = []

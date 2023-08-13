@@ -1,7 +1,8 @@
 import unittest
 import timer
 import solucao
-
+import heuristic
+import timeit
 
 class TestaSolucao(unittest.TestCase):
     
@@ -90,13 +91,13 @@ class TestaSolucao(unittest.TestCase):
             self.assertEqual(solucao_otima, self.run_algorithm(alg, estado))
 
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
     
     #solucao.astar_hamming("1235_6478")
     #print(solucao.astar_hamming("2_3541687"))
     #solucao.astar_hamming("185423_67")
     
-    #print(solucao.manhattan_cost(solucao.Nodo("185423_67", None, None, 0)))
+    #print(heuristic.manhattan_cost("185423_67"))
     #print(solucao.astar_manhattan("2_3541687"))
     #print(solucao.astar_manhattan("185423_67"))
     
@@ -108,3 +109,54 @@ if __name__ == '__main__':
     #print(solucao.dfs("2_3541687"))
     #print(solucao.dfs("185423_67"))
     
+    #print(heuristic.eucledian_cost("185423_67"))
+    #print(solucao.astar_new_heuristic("1235_6478"))
+    #print(solucao.astar_new_heuristic("2_3541687"))
+    #print(solucao.astar_new_heuristic("185423_67"))
+    
+    # ================================== TEMPOS DE EXECUÇÃO ==================================
+    
+    # ========== BFS ==========
+    start = timeit.default_timer()
+    solucao.bfs("2_3541687")
+    stop = timeit.default_timer()
+    print(stop - start)
+    # Nós:   100309
+    # Custo: 23
+    # Tempo: 2.48s
+    
+    # ========== DFS ==========
+    start = timeit.default_timer()
+    solucao.dfs("2_3541687")
+    stop = timeit.default_timer()
+    print(stop - start)
+    # Nós:   20549
+    # Custo: 20355
+    # Tempo: 3.05s
+    
+    # ========== A* HAMMING ==========
+    start = timeit.default_timer()
+    solucao.astar_hamming("2_3541687")
+    stop = timeit.default_timer()
+    print(stop - start)
+    # Nós:   11877
+    # Custo: 23
+    # Tempo: 0.13s
+    
+    # ========== A* MANHATTAN ==========
+    start = timeit.default_timer()
+    solucao.astar_manhattan("2_3541687")
+    stop = timeit.default_timer()
+    print(stop - start)
+    # Nós:   1396
+    # Custo: 23
+    # Tempo: 0.02
+    
+    # ========== A* EUCLEDIAN ==========
+    start = timeit.default_timer()
+    solucao.astar_new_heuristic("2_3541687")
+    stop = timeit.default_timer()
+    print(stop - start)
+    # Nós:   3139
+    # Custo: 23
+    # Tempo: 0.06
