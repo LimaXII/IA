@@ -90,8 +90,15 @@ class TestaSolucao(unittest.TestCase):
             self.assertEqual(solucao_otima, self.run_algorithm(alg, estado))
 
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
     #solucao.astar_hamming("1235_6478")
     #print(solucao.astar_hamming("2_3541687"))
     #solucao.astar_hamming("185423_67")
     #print(solucao.manhattan_cost(solucao.Nodo("185423_67", None, None, 0)))
+    #print(solucao.bfs("1235_6478"))
+    #print(solucao.bfs("2_3541687"))
+    #print(solucao.bfs("185423_67"))
+    #print(solucao.dfs("1235_6478"))
+    #print(solucao.dfs("2_3541687"))
+    print(solucao.dfs("185423_67"))
+    

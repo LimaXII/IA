@@ -195,9 +195,27 @@ def bfs(estado:str)->list[str]:
     Caso não haja solução a partir do estado recebido, retorna None
     :param estado: str
     :return:
-    """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    """    
+    initial_node = Nodo(estado, None, None, 0)
+    explored = set()
+    border = [initial_node]
+    
+    while (border):
+        current_node = border.pop(0)
+        
+        if current_node.estado == "12345678_": #final state
+            path = []
+            while(current_node.pai is not None):
+                path.insert(0, current_node.acao)
+                current_node = current_node.pai
+            return path #lista de ações que leva ao estado final
+        if current_node.estado not in explored:
+            explored.add(current_node.estado)
+            son_node_set = expande(current_node)
+            for node in son_node_set:
+                border.append(node)
+            
+    return None
 
 
 def dfs(estado:str)->list[str]:
@@ -209,8 +227,26 @@ def dfs(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    # substituir a linha abaixo pelo seu codigo
-    raise NotImplementedError
+    initial_node = Nodo(estado, None, None, 0)
+    explored = set()
+    border = [initial_node]
+    
+    while (border):
+        current_node = border.pop()
+        
+        if current_node.estado == "12345678_": #final state
+            path = []
+            while(current_node.pai is not None):
+                path.insert(0, current_node.acao)
+                current_node = current_node.pai
+            return path #lista de ações que leva ao estado final
+        if current_node.estado not in explored:
+            explored.add(current_node.estado)
+            son_node_set = expande(current_node)
+            for node in son_node_set:
+                border.append(node)
+            
+    return None
 
 def astar_new_heuristic(estado:str)->list[str]:
     """
