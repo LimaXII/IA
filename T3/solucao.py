@@ -1,5 +1,7 @@
-from typing import Iterable, Set, Tuple
+from typing import Iterable, Set, Tuple, Callable
 import help
+import constants
+import heuristic
 from heapq import heapify, heappush, heappop
 
 class Nodo:
@@ -20,7 +22,7 @@ class Nodo:
         self.custo = custo
         self.custo_estimado = 0
         
-    # override the comparison operator
+    # Sobreescreve o operador de comparação para ordenar baseado no custo estimado, útil ao heap usado no A*
     def __lt__(self, nxt):
         return self.custo_estimado < nxt.custo_estimado
 
@@ -32,50 +34,53 @@ def sucessor(estado:str)->Set[Tuple[str,str]]:
     Tanto a ação quanto o estado atingido são strings também.
     :param estado:
     :return:
-    """
-    # Conjunto de elementos possíveis    
-    possible_set = {'1', '2', '3', '4', '5', '6', '7', '8', '_'}
-    
-    # Verifica se o estado/string possui 9 caracteres
-    if len(estado) != 9:
-        return "ERRO"
-    # Verifica se o estado/string não repete elementos
-    if len(set(estado)) != 9:
-        return "ERRO"
-    # Verifica se os caracteres do estado/string estão no conjunto de elementos possíveis
-    for char in estado:
-        if char not in possible_set:
-            return "ERRO"
+    """            
+    if (invalid_state(estado)):
+        return constants.ERROR_MESSAGE
 
-    underline_position = estado.find('_')
+    underline_position = estado.find(constants.UNDERLINE_CHAR)
     successor_set = set()
     
     # Pode mover pra cima
     if underline_position - 3 >= 0:
         successor_set.add((
-            "acima",
+            constants.UP,
             help.swap_string(estado, underline_position, underline_position - 3)
         ))
     # Pode mover pra baixo
     if underline_position + 3 <= 8:
         successor_set.add((
-            "abaixo",
+            constants.DOWN,
             help.swap_string(estado, underline_position, underline_position + 3)
         ))
     # Pode mover pra direita
     if (underline_position + 1) % 3 != 0:
         successor_set.add((
-            "direita",
+            constants.RIGHT,
             help.swap_string(estado, underline_position, underline_position + 1)
         ))
     # Pode mover pra esquerda
     if underline_position % 3 != 0:
         successor_set.add((
-            "esquerda",
+            constants.LEFT,
             help.swap_string(estado, underline_position, underline_position - 1)
         ))
         
     return successor_set
+    
+def invalid_state(state: str) -> bool:
+    # Verifica se o estado/string possui 9 caracteres
+    if len(state) != 9:
+        return True
+    # Verifica se o estado/string não repete elementos
+    if len(set(state)) != 9:
+        return True
+    # Verifica se os caracteres do estado/string estão no conjunto de elementos possíveis
+    for char in state:
+        if char not in constants.POSSIBLE_SET:
+            return True
+        
+    return False
     
 
 def expande(nodo:Nodo)->Set[Nodo]:
@@ -95,6 +100,27 @@ def expande(nodo:Nodo)->Set[Nodo]:
     return node_set
 
 
+def astar(estado:str, heuristic_cost_function:Callable[[Nodo], int])->list[str]:
+    initial_node = Nodo(estado, None, None, 0)
+    explored = set()
+    border = [initial_node]
+    heapify(border)
+    
+    while (border):
+        # Retira o nodo com o menor custo estimado
+        current_node = heappop(border) 
+        
+        if current_node.estado == constants.FINAL_STATE:
+            return find_path(current_node)
+        if current_node.estado not in explored:
+            explored.add(current_node.estado)
+            for node in expande(current_node):
+                node.custo_estimado = node.custo + heuristic_cost_function(node.estado)
+                heappush(border, node)
+            
+    return None
+
+
 def astar_hamming(estado:str)->list[str]:
     """
     Recebe um estado (string), executa a busca A* com h(n) = soma das distâncias de Hamming e
@@ -104,38 +130,7 @@ def astar_hamming(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    initial_node = Nodo(estado, None, None, 0)
-    explored = set()
-    border = [initial_node]
-    heapify(border)
-    
-    while (border):    
-        current_node = heappop(border) #função que retira o nodo com o menor custo estimado
-        
-        if current_node.estado == "12345678_": #final state
-            path = []
-            while(current_node.pai is not None):
-                path.insert(0, current_node.acao)
-                current_node = current_node.pai
-            return path #lista de ações que leva ao estado final
-        if current_node.estado not in explored:
-            explored.add(current_node.estado)
-            son_node_set = expande(current_node)
-            for node in son_node_set:
-                node.custo_estimado = node.custo + hamming_cost(node)
-                heappush(border, node)
-            
-    return None
-
-# ADICIONAL
-def hamming_cost(node: Nodo) -> int:
-    node_state = node.estado
-    final_state = '12345678_'
-    hamming_cost = 0
-    for i in range(9):
-        if node_state[i] != final_state[i]:
-            hamming_cost += 1
-    return hamming_cost 
+    return astar(estado, heuristic.hamming_cost)
 
 
 def astar_manhattan(estado:str)->list[str]:
@@ -147,45 +142,26 @@ def astar_manhattan(estado:str)->list[str]:
     :param estado: str
     :return:
     """
+    return astar(estado, heuristic.manhattan_cost)
+
+
+def bfs_or_dfs(estado:str, data_structure:constants):
     initial_node = Nodo(estado, None, None, 0)
     explored = set()
     border = [initial_node]
-    heapify(border)
     
-    while (border):    
-        current_node = heappop(border) #função que retira o nodo com o menor custo estimado
+    while (border):
+        current_node = border.pop(data_structure)
         
-        if current_node.estado == "12345678_": #final state
-            path = []
-            while(current_node.pai is not None):
-                path.insert(0, current_node.acao)
-                current_node = current_node.pai
-            return path #lista de ações que leva ao estado final
+        if current_node.estado == constants.FINAL_STATE:
+            return find_path(current_node)
         if current_node.estado not in explored:
             explored.add(current_node.estado)
-            son_node_set = expande(current_node)
-            for node in son_node_set:
-                node.custo_estimado = node.custo + manhattan_cost(node)
-                heappush(border, node)
+            for node in expande(current_node):
+                border.append(node)
             
     return None
 
-# ADICIONAL
-def manhattan_cost(node: Nodo) -> int:
-    node_state = node.estado
-    final_board = {'1' : [0,0], '2' : [1,0], '3' : [2,0],
-                   '4' : [0,1], '5' : [1,1], '6' : [2,1],
-                   '7' : [0,2], '8' : [1,2], '_' : [2,2]}
-    
-    board = {}
-    for i in range(9):
-        board[node_state[i]] = [i % 3, i // 3]
-        
-    manhattan_cost = 0
-    for key in board.keys():
-        manhattan_cost += abs(final_board[key][0] - board[key][0]) + abs(final_board[key][1] - board[key][1])
-    
-    return manhattan_cost
 
 def bfs(estado:str)->list[str]:
     """
@@ -196,26 +172,7 @@ def bfs(estado:str)->list[str]:
     :param estado: str
     :return:
     """    
-    initial_node = Nodo(estado, None, None, 0)
-    explored = set()
-    border = [initial_node]
-    
-    while (border):
-        current_node = border.pop(0)
-        
-        if current_node.estado == "12345678_": #final state
-            path = []
-            while(current_node.pai is not None):
-                path.insert(0, current_node.acao)
-                current_node = current_node.pai
-            return path #lista de ações que leva ao estado final
-        if current_node.estado not in explored:
-            explored.add(current_node.estado)
-            son_node_set = expande(current_node)
-            for node in son_node_set:
-                border.append(node)
-            
-    return None
+    return bfs_or_dfs(estado, constants.QUEUE)
 
 
 def dfs(estado:str)->list[str]:
@@ -227,26 +184,7 @@ def dfs(estado:str)->list[str]:
     :param estado: str
     :return:
     """
-    initial_node = Nodo(estado, None, None, 0)
-    explored = set()
-    border = [initial_node]
-    
-    while (border):
-        current_node = border.pop()
-        
-        if current_node.estado == "12345678_": #final state
-            path = []
-            while(current_node.pai is not None):
-                path.insert(0, current_node.acao)
-                current_node = current_node.pai
-            return path #lista de ações que leva ao estado final
-        if current_node.estado not in explored:
-            explored.add(current_node.estado)
-            son_node_set = expande(current_node)
-            for node in son_node_set:
-                border.append(node)
-            
-    return None
+    return bfs_or_dfs(estado, constants.STACK)
 
 def astar_new_heuristic(estado:str)->list[str]:
     """
@@ -259,3 +197,10 @@ def astar_new_heuristic(estado:str)->list[str]:
     """
     # substituir a linha abaixo pelo seu codigo
     raise NotImplementedError
+
+def find_path(node: Nodo) -> list[str]:
+    path = []
+    while(node.pai is not None):
+        path.insert(0, node.acao)
+        node = node.pai
+    return path
