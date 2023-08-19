@@ -1,7 +1,6 @@
 import random
 from typing import Tuple, Callable
-
-
+from advsearch.tttm.gamestate import GameState
 
 def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
     """
@@ -13,4 +12,44 @@ def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
                     and should return a float value representing the utility of the state for the player.
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
-    raise NotImplementedError()
+    def max_value(state:GameState, max_depth, alpha, beta):
+        if max_depth == 0 or GameState.is_terminal(state):
+            return eval_func(state, state.player)
+        
+        value = float('-inf')
+        for move in GameState.legal_moves(state):
+            new_state = state.next_state(move)
+            value = max(value, min_value(new_state, max_depth - 1, alpha, beta))
+            alpha = max(alpha, value)
+            if alpha >= beta:
+                break
+        return value
+    
+    def min_value(state:GameState, max_depth, alpha, beta):
+        if max_depth == 0 or GameState.is_terminal(state):
+            return eval_func(state, state.player)
+        
+        value = float('inf')
+        for move in GameState.legal_moves(state):
+            new_state = state.next_state(move)
+            value = min(value, max_value(new_state, max_depth - 1, alpha, beta))
+            beta = min(beta, value)
+            if beta <= alpha:
+                break
+        return value
+    
+    best_move = None
+    alpha = float('-inf')
+    beta = float('inf')
+    
+    if max_depth == -1:
+        max_depth = float('inf')
+       
+    for move in GameState.legal_moves(state):
+        new_state = state.next_state(move)
+        value = min_value(new_state, max_depth - 2, alpha, beta)
+        if value > alpha:
+            alpha = value
+            best_move = move
+    
+    return best_move

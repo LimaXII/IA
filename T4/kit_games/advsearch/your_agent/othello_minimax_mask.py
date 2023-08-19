@@ -37,10 +37,11 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
+    return minimax_move(state, -1, evaluate_mask)
+    #return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
 
 
-def evaluate_mask(state, player:str) -> float:
+def evaluate_mask(state:GameState, player:str) -> float:
     """
     Evaluates an othello state from the point of view of the given player. 
     If the state is terminal, returns its utility. 
@@ -49,4 +50,15 @@ def evaluate_mask(state, player:str) -> float:
     :param state: state to evaluate (instance of GameState)
     :param player: player to evaluate the state for (B or W)
     """
-    return 0   # substitua pelo seu codigo
+    # O minimax só não usa a função de avaliação em estados terminais???
+    
+    board = state.get_board()
+    size_board = len(board)
+    
+    points = 0
+    for row in range(size_board):
+        for collumn in range(size_board):
+            if (board[row][collumn] == player):
+                points += EVAL_TEMPLATE[row][collumn]
+
+    return points

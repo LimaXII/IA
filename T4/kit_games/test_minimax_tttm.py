@@ -156,3 +156,6 @@ BW.
 
 if __name__ == '__main__':
     unittest.main()
+    #board = Board()
+    #state = GameState(board, 'B')
+    #move = minimax.minimax_move2(state, -1, tttm_agent.utility)
