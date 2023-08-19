@@ -18,9 +18,12 @@ def make_move(state) -> Tuple[int, int]:
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
 
-    # o codigo abaixo retorna uma jogada ilegal
+    # o codigo abaixo retorna uma jogada ilegal    
     # Remova-o e coloque a sua implementacao do MCTS
 
-    return (-1, -1)
+    root = state.player
 
 
+
+
+    return (-1, -1) 
