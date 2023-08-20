@@ -27,7 +27,7 @@ def make_move(state) -> Tuple[int, int]:
     #return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
 
 
-def evaluate_count(state:GameState, player:str) -> float:
+def evaluate_count(state, player:str) -> float:
     """
     Evaluates an othello state from the point of view of the given player. 
     If the state is terminal, returns its utility. 

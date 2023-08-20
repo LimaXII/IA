@@ -1,7 +1,5 @@
-import random
 from typing import Tuple
 from ..tttm.gamestate import GameState
-from ..tttm.board import Board
 from .minimax import minimax_move
 
 # Voce pode criar funcoes auxiliares neste arquivo
@@ -10,7 +8,7 @@ from .minimax import minimax_move
 # Nao esqueca de renomear 'your_agent' com o nome
 # do seu agente.
 
-def make_move(state: GameState) -> Tuple[int, int]:
+def make_move(state) -> Tuple[int, int]:
     """
     Retorna uma jogada calculada pelo algoritmo minimax para o estado de jogo fornecido.
     :param state: estado para fazer a jogada
@@ -27,7 +25,7 @@ def make_move(state: GameState) -> Tuple[int, int]:
     return minimax_move(state, -1, utility)
     #return random.choice(range(3)), random.choice(range(3))
 
-def utility(state: GameState, player:str) -> float:
+def utility(state, player:str) -> float:
     """
     Retorna a utilidade de um estado (terminal) 
     """

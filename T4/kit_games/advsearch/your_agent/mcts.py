@@ -22,8 +22,8 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque a sua implementacao do MCTS
 
     root = state.player
+    return mcts(root, state, iterations= 1000)
 
-
-
-
-    return (-1, -1) 
+def mcts(root, iterations, state):
+    for _ in range(iterations):
+        pass

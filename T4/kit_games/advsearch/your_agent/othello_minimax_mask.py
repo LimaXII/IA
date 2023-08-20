@@ -1,6 +1,4 @@
-import random
 from typing import Tuple
-from ..othello.gamestate import GameState
 from ..othello.board import Board
 from .minimax import minimax_move
 
@@ -41,7 +39,7 @@ def make_move(state) -> Tuple[int, int]:
     #return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
 
 
-def evaluate_mask(state:GameState, player:str) -> float:
+def evaluate_mask(state, player:str) -> float:
     """
     Evaluates an othello state from the point of view of the given player. 
     If the state is terminal, returns its utility. 

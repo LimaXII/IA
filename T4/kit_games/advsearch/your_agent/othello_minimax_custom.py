@@ -35,4 +35,40 @@ def evaluate_custom(state, player:str) -> float:
     :param state: state to evaluate (instance of GameState)
     :param player: player to evaluate the state for (B or W)
     """
-    return 0    # substitua pelo seu codigo
+
+    opponent = -player
+    player_points = 0
+    opponent_points = 0
+    board = state.get_board()
+    size_board = len(board.tiles)
+
+    for row in range(size_board):
+        for col in range(size_board):
+            if board.tiles[row][col] == player:
+                player_points += calculate_tile_value(row, col, size_board, state)
+            elif board.tiles[row][col] == opponent:
+                opponent_points += calculate_tile_value(row, col, size_board, state)
+                 
+    return player_points - opponent_points
+
+def calculate_tile_value(row, col, size_board, state):
+        value = 1
+
+        # Adicionar valor às peças nas bordas
+        if row == 0 or row == size_board - 1 or col == 0 or col == size_board - 1:
+            value += 0.5
+
+        # Adicionar valor às peças estáveis nas diagonais
+        if (row == 0 and col == 0) or (row == 0 and col == size_board - 1) or \
+            (row == size_board - 1 and col == 0) or (row == size_board - 1 and col == size_board - 1):
+            value += 2
+
+        # Avaliar mobilidade considerando o número de jogadas possíveis
+        mobility = len(GameState.legal_moves(state))
+        value += mobility * 0.1
+
+        return value   
+
+
+
+    
