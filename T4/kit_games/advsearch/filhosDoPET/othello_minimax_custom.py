@@ -23,7 +23,7 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    return minimax_move(state, 64, evaluate_custom)
+    return minimax_move(state, 4, evaluate_custom)
     #return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
 
 
@@ -36,7 +36,7 @@ def evaluate_custom(state, player:str) -> float:
     :param player: player to evaluate the state for (B or W)
     """
 
-    opponent = -player
+    opponent = Board.opponent(player)
     player_points = 0
     opponent_points = 0
     board = state.get_board()
@@ -49,14 +49,14 @@ def evaluate_custom(state, player:str) -> float:
             elif board.tiles[row][col] == opponent:
                 opponent_points += calculate_tile_value(row, col, size_board, state)
                  
-    return player_points - opponent_points
+    return player_points/opponent_points * 100
 
 def calculate_tile_value(row, col, size_board, state):
         value = 1
 
         # Adicionar valor às peças nas bordas
         if row == 0 or row == size_board - 1 or col == 0 or col == size_board - 1:
-            value += 0.5
+            value += 1
 
         # Adicionar valor às peças estáveis nas diagonais
         if (row == 0 and col == 0) or (row == 0 and col == size_board - 1) or \
@@ -64,11 +64,8 @@ def calculate_tile_value(row, col, size_board, state):
             value += 2
 
         # Avaliar mobilidade considerando o número de jogadas possíveis
-        mobility = len(GameState.legal_moves(state))
-        value += mobility * 0.1
-
-        return value   
-
-
-
-    
+        if state.is_terminal():
+            return value
+        mobility = len(state.board.legal_moves(state.player))
+        value += mobility * 0.2
+        return value

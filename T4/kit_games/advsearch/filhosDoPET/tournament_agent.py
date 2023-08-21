@@ -2,6 +2,7 @@ import random
 from typing import Tuple
 from ..othello.gamestate import GameState
 from ..othello.board import Board
+import othello_minimax_custom
 
 # Voce pode criar funcoes auxiliares neste arquivo
 # e tambem modulos auxiliares neste pacote.
@@ -25,6 +26,6 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque a sua implementacao da poda alpha-beta
 
     if state.game_name == 'Othello':
-        return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
+        return othello_minimax_custom.make_move()
 
 

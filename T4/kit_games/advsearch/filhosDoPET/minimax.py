@@ -46,7 +46,7 @@ def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
         max_depth = float('inf')
     for move in state.legal_moves():
         new_state = state.next_state(move)
-        value = min_value(new_state, max_depth - 2, alpha, beta, player)
+        value = min_value(new_state, max_depth - 1, alpha, beta, player)
         if value > alpha:
             alpha = value
             best_move = move
